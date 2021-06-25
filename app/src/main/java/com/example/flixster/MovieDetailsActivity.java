@@ -1,5 +1,6 @@
 package com.example.flixster;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -14,6 +15,9 @@ import com.example.flixster.models.Movie;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MovieDetailsActivity extends AppCompatActivity {
     Movie movie;
 
@@ -22,6 +26,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView tvDetailsOverview;
     RatingBar rbVoteAverage;
     ImageView ivDetailsPoster;
+    TextView tvVoteAverage;
+    TextView tvGenres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         tvDetailsOverview = (TextView) findViewById(R.id.tvDetailsOverview);
         rbVoteAverage = (RatingBar) findViewById(R.id.rbVoteAverage);
         ivDetailsPoster = (ImageView) findViewById(R.id.ivDetailsPoster);
-
+        tvVoteAverage = (TextView) findViewById(R.id.tvVoteAverage);
+        tvGenres = (TextView) findViewById(R.id.tvGenres);
 
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
         Log.d("MovieDetailsActivity", String.format("Showing details for '%s'", movie.getTitle()));
@@ -42,8 +49,33 @@ public class MovieDetailsActivity extends AppCompatActivity {
         float voteAverage = movie.getVoteAverage().floatValue();
         Log.d("MovieDetailsActivity", String.format("Rating %s", voteAverage));
         rbVoteAverage.setRating(voteAverage / 2.0f);
-        Glide.with(this).load(movie.getPosterPath()).placeholder(R.drawable.flicks_movie_placeholder).into(ivDetailsPoster);
 
+        String imageUrl;
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            imageUrl = movie.getBackdropPath();
+        }
+        else {
+            imageUrl = movie.getPosterPath();
+        }
+        Glide.with(this).load(imageUrl).placeholder(R.drawable.flicks_movie_placeholder).into(ivDetailsPoster);
+
+        String voteAverageWithCount = String.format("%s/10 (%s votes)", movie.getVoteAverage(), movie.getVoteCount());
+        tvVoteAverage.setText(voteAverageWithCount);
+
+        tvGenres.setText(createGenreString());
     }
+
+    public String createGenreString() {
+        HashMap<Integer, String> map = movie.getGenreMap();
+        String separator = "";
+        String res = "Genres: ";
+        for (Integer id : movie.getGenreIDs()) {
+            res += separator + map.get(id);
+            separator = ", ";
+        }
+        return res;
+    }
+
+
 
 }
