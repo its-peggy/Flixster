@@ -16,7 +16,10 @@ import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class MovieDetailsActivity extends AppCompatActivity {
     Movie movie;
@@ -28,6 +31,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView ivDetailsPoster;
     TextView tvVoteAverage;
     TextView tvGenres;
+    TextView tvCast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ivDetailsPoster = (ImageView) findViewById(R.id.ivDetailsPoster);
         tvVoteAverage = (TextView) findViewById(R.id.tvVoteAverage);
         tvGenres = (TextView) findViewById(R.id.tvGenres);
+        tvCast = (TextView) findViewById(R.id.tvCast);
 
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
         Log.d("MovieDetailsActivity", String.format("Showing details for '%s'", movie.getTitle()));
@@ -57,25 +62,31 @@ public class MovieDetailsActivity extends AppCompatActivity {
         else {
             imageUrl = movie.getPosterPath();
         }
-        Glide.with(this).load(imageUrl).placeholder(R.drawable.flicks_movie_placeholder).into(ivDetailsPoster);
+
+        int radius = 30; // corner radius, higher value = more rounded
+        int margin = 10; // crop margin, set to 0 for corners with no crop
+        Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.flicks_movie_placeholder)
+                .transform(new RoundedCornersTransformation(radius, margin))
+                .into(ivDetailsPoster); // load INTO the ivPoster view
 
         String voteAverageWithCount = String.format("%s/10 (%s votes)", movie.getVoteAverage(), movie.getVoteCount());
         tvVoteAverage.setText(voteAverageWithCount);
 
-        tvGenres.setText(createGenreString());
+        tvGenres.setText(String.format("%s: "+ formatStringList(movie.getGenreStrings()), "Genres"));
+        tvCast.setText(String.format("%s: "+ formatStringList(movie.getStarring()), "Starring"));
     }
 
-    public String createGenreString() {
-        HashMap<Integer, String> map = movie.getGenreMap();
+    public String formatStringList(List<String> strList) {
         String separator = "";
-        String res = "Genres: ";
-        for (Integer id : movie.getGenreIDs()) {
-            res += separator + map.get(id);
+        String res = "";
+        for (String s : strList) {
+            res += separator + s;
             separator = ", ";
         }
         return res;
     }
-
 
 
 }

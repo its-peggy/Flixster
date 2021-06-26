@@ -23,6 +23,8 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 // the class is parameterized by a ViewHolder (the type you just defined inside
 // need to import the ViewHolder YOU just defined (MovieAdapter.ViewHolder), not the generic one
 // The base RecyclerView.Adapter is an ABSTRACT CLASS, so we need to implement the following 3 methods
@@ -101,7 +103,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             else {
                 imageUrl = movie.getPosterPath();
             }
-            Glide.with(context).load(imageUrl).placeholder(R.drawable.flicks_movie_placeholder).into(ivPoster); // load INTO the ivPoster view
+            int radius = 30; // corner radius, higher value = more rounded
+            int margin = 10; // crop margin, set to 0 for corners with no crop
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.flicks_movie_placeholder)
+                    .transform(new RoundedCornersTransformation(radius, margin))
+                    .into(ivPoster); // load INTO the ivPoster view
         }
 
         @Override

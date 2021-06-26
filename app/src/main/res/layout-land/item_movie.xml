@@ -23,18 +23,22 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivPoster"
-        android:textSize="24sp"
+        android:fontFamily="@font/abel"
+        android:textSize="20sp"
         tools:text="A Quiet Place Part II" />
 
     <TextView
         android:id="@+id/tvOverview"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
+        android:layout_width="368dp"
+        android:layout_height="68dp"
         android:layout_below="@+id/tvTitle"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
         android:layout_toEndOf="@+id/ivPoster"
+        android:ellipsize="end"
+        android:fontFamily="@font/abel"
+        android:maxLines="6"
         tools:text="Following the events at home, the Abbott family now face the terrors of the outside world. Forced to venture into the unknown, they realize that the creatures that hunt by sound are not the only threats that lurk beyond the sand path." />
 </RelativeLayout>

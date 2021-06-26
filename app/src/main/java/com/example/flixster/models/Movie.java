@@ -10,9 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.parceler.Parcel;
 
@@ -26,10 +24,13 @@ public class Movie {
     String overview;
     Double voteAverage;
     Integer voteCount;
-    List<Integer> genreIDs = new ArrayList<Integer>();
-    List<String> genreStrings = new ArrayList<String>();
-    static HashMap<Integer, String> genreMap = createGenreMap();
-    static String GENRE_MAPPING_URL = "https://api.themoviedb.org/3/genre/movie/list?api_key=d93f42fb016d7133007e5d73db292fa9";
+    List<Integer> genreIDs;
+    List<String> genreStrings;
+    Integer movieID;
+    List<String> starring;
+
+    public static final String GENRE_MAPPING_URL = "https://api.themoviedb.org/3/genre/movie/list?api_key=d93f42fb016d7133007e5d73db292fa9";
+    public static final String MOVIE_CREDITS_URL = "https://api.themoviedb.org/3/movie/%s/credits?api_key=d93f42fb016d7133007e5d73db292fa9";
 
     public Movie() {};
 
@@ -40,39 +41,69 @@ public class Movie {
         overview = jsonObject.getString("overview");
         voteAverage = jsonObject.getDouble("vote_average");
         voteCount = jsonObject.getInt("vote_count");
+
+        genreIDs = new ArrayList<>();
         JSONArray jsonArray = jsonObject.getJSONArray("genre_ids");
         for(int i = 0; i < jsonArray.length(); i++){
             genreIDs.add(jsonArray.getInt(i));
-            genreStrings.add(genreMap.get(jsonArray.getInt(i)));
         }
+
+        genreStrings = getGenreNames(genreIDs);
+        movieID = jsonObject.getInt("id");
+        starring = getActorList(movieID);
     }
 
-    private static HashMap<Integer, String> createGenreMap() {
-        Log.d("making_map", "map making method is called");
-        HashMap<Integer, String> genre_mapping = new HashMap<Integer, String>();
+    public List<String> getActorList(Integer movieID) {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(GENRE_MAPPING_URL, new JsonHttpResponseHandler() {
+        ArrayList<String> actorNames = new ArrayList<>();
+        String creditsURL = String.format(MOVIE_CREDITS_URL, movieID);
+        client.get(creditsURL, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) { // these params are the info passed back by client.get ?
-                JSONObject jsonObject = json.jsonObject;
+            public void onSuccess(int i, Headers headers, JSON json) {
                 try {
-                    JSONArray results = jsonObject.getJSONArray("genres");
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject objectAtIndex = results.getJSONObject(i);
-                        Log.d("making_map", String.format("id is %s, name is %s", objectAtIndex.getInt("id"), objectAtIndex.getString("name")));
-                        genre_mapping.put(objectAtIndex.getInt("id"), objectAtIndex.getString("name"));
-                        Log.d("making_map", String.format("in the map: %s --> %s", objectAtIndex.getInt("id"), genre_mapping.get(objectAtIndex.getString("id"))));
+                    JSONArray cast = json.jsonObject.getJSONArray("cast");
+                    for (int j = 0; j < java.lang.Math.min(cast.length(), 5); j++) {
+                        actorNames.add(cast.getJSONObject(j).getString("name"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Headers headers, String s, Throwable throwable) {
-                Log.d("making_map", "onFailure");
+            public void onFailure(int i, Headers headers, String s, Throwable throwable) {
+                Log.d("Movie class", "Error trying to get movie cast");
             }
         });
-        return genre_mapping;
+        return actorNames;
+    }
+
+    public ArrayList<String> getGenreNames(List<Integer> genreIDs) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        ArrayList<String> genreNames = new ArrayList<>();
+        client.get(GENRE_MAPPING_URL, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Headers headers, JSON json) {
+                try {
+                    JSONArray genres = json.jsonObject.getJSONArray("genres");
+                    for (int j = 0; j < genreIDs.size(); j++) {
+                        for (int k = 0; k < genres.length(); k++) {
+                            if (genres.getJSONObject(k).getInt("id") == genreIDs.get(j))
+                                genreNames.add(genres.getJSONObject(k).getString("name"));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int i, Headers headers, String s, Throwable throwable) {
+                Log.d("Movie class", "Error trying to get genres");
+            }
+        });
+        return genreNames;
     }
 
     // create List of movies given a JSON Array of movies
@@ -92,21 +123,16 @@ public class Movie {
         return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
 
-    public String getOverview() {
-        return overview;
-    }
+    public String getOverview() { return overview; }
 
-    public Double getVoteAverage() {
-        return voteAverage;
-    }
+    public Double getVoteAverage() { return voteAverage; }
 
     public Integer getVoteCount() { return voteCount; }
 
-    public List<Integer> getGenreIDs() { return genreIDs; }
+    public List<String> getGenreStrings() { return genreStrings; }
 
-    public static HashMap<Integer, String> getGenreMap() { return genreMap; }
+    public List<String> getStarring() { return starring; }
+
 }

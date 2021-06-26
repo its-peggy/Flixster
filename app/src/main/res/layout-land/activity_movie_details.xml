@@ -19,8 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/abel"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/ivDetailsPoster"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="A Quiet Place Part II" />
@@ -33,6 +34,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:numStars="5"
+        android:progressTint="#4CAF50"
         android:stepSize="0.5"
         app:layout_constraintStart_toEndOf="@+id/ivDetailsPoster"
         app:layout_constraintTop_toBottomOf="@+id/tvDetailsTitle"
@@ -40,11 +42,39 @@
 
     <TextView
         android:id="@+id/tvDetailsOverview"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_marginStart="4dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/abel"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivDetailsPoster"
         tools:text="Following the events at home, the Abbott family now face the terrors of the outside world. Forced to venture into the unknown, they realize that the creatures that hunt by sound are not the only threats that lurk beyond the sand path." />
+
+    <TextView
+        android:id="@+id/tvVoteAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/abel"
+        app:layout_constraintStart_toEndOf="@+id/ivDetailsPoster"
+        app:layout_constraintTop_toBottomOf="@+id/rbVoteAverage"
+        tools:text="7.4/10 (437 votes)" />
+
+    <TextView
+        android:id="@+id/tvGenres"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/abel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDetailsOverview"
+        tools:text="Genres: Science Fiction, Thriller, Horror" />
 </androidx.constraintlayout.widget.ConstraintLayout>
