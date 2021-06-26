@@ -30,6 +30,8 @@ The following **additional** features are implemented:
 Here's a walkthrough of implemented user stories:
 
 <img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='walkthrough_land.gif' title='Video Walkthrough (Landscape)' width='' alt='Video Walkthrough (landscape)' />
+
 
 GIF created with QuickTime Player (Mac).
 
