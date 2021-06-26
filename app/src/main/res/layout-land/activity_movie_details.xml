@@ -5,10 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvCast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/abel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvGenres"
+        tools:text="Starring: Emily Blunt, John Krasinski, Millicent Simmonds, Noah Jupe, Cillian Murphy" />
+
     <ImageView
         android:id="@+id/ivDetailsPoster"
-        android:layout_width="320dp"
-        android:layout_height="180dp"
+        android:layout_width="272dp"
+        android:layout_height="153dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -33,6 +47,7 @@
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
+        android:clickable="false"
         android:numStars="5"
         android:progressTint="#4CAF50"
         android:stepSize="0.5"
@@ -67,7 +82,7 @@
     <TextView
         android:id="@+id/tvGenres"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
